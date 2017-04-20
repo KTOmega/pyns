@@ -1,16 +1,27 @@
 import config
 import json
+import os
 import threading
 
 _contents = {}
 _lock = threading.Lock()
 
+def _write():
+    """Writes the database to the filesystem.
+    Precondition: The lock is acquired by the calling function.
+    """
+    with open(config.db, "w") as db_fd:
+        json.dump(_contents, db_fd)
+
 def init():
     global _contents
     _lock.acquire()
-    
-    with open(config.db, "r") as db_fd:
-        _contents = json.load(db_fd)
+
+    if not os.path.isfile(config.db):
+        _write()
+    else:
+        with open(config.db, "r") as db_fd:
+            _contents = json.load(db_fd)
 
     _lock.release()
 
@@ -32,9 +43,7 @@ def set(name, value):
     _lock.acquire()
 
     _contents[name] = value
-
-    with open(config.db, "w") as db_fd:
-        json.dump(_contents, db_fd)
+    _write()
 
     _lock.release()
 
@@ -43,8 +52,7 @@ def delete(name):
 
     if name in _contents:
         del _contents[name]
-        with open(config.db, "w") as db_fd:
-            json.dump(_contents, db_fd)
+        _write()
 
     _lock.release()
 
