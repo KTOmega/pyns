@@ -9,7 +9,7 @@ body { font-family: Roboto, sans-serif; }
 p#footer { color: #ccc; }
 table { width: 250px; padding: 1em; text-align: center;  }
 a { text-decoration: none; }
-a:link, a:visited { color: #0D47A1; transition: 0.1s color; }
+a:link, a:visited { color: #0D47A1; transition: 0.25s color; }
 a:hover { color: #1976D2; }
 </style>
 <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
@@ -23,6 +23,7 @@ $(document).ready(function() {
 			"name": $("input[name='name']").val(),
 			"email": $("input[name='email']").val(),
 			"secret": $("input[name='secret']").val(),
+			"nonce": $("input[name='nonce']").val()
 		}, function(data) {
 			if (data.status == "error") {
 				alert(data.error);
@@ -41,6 +42,7 @@ $(document).ready(function() {
 	<div id="form">
 		<h3>Add your server</h3>
 		<form id="it">
+			<input type="hidden" name="nonce" value="{{ nonce }}" />
 			<input type="text" name="hostname" placeholder="Hostname" /> <input type="text" name="ip" placeholder="IP Address" /><br />
 			<input type="text" name="name" placeholder="Your name" /> <input type="email" name="email" placeholder="Your e-mail address" /><br />
 			<input type="text" name="secret" placeholder="Secret" /><br />

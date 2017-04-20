@@ -38,6 +38,16 @@ def set(name, value):
 
     _lock.release()
 
+def delete(name):
+    _lock.acquire()
+
+    if name in _contents:
+        del _contents[name]
+        with open(config.db, "w") as db_fd:
+            json.dump(_contents, db_fd)
+
+    _lock.release()
+
 def get_all():
     _lock.acquire()
 
