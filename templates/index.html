@@ -1,0 +1,61 @@
+<!-- I know it sucks but I wrote this at 4:40 AM the night before my workshop give me a break -->
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Intro to Servers Workshop &raquo; Hackers@Berkeley</title>
+<style>
+@import url('https://fonts.googleapis.com/css?family=Roboto');
+body { font-family: Roboto, sans-serif; }
+p#footer { color: #ccc; }
+table { width: 250px; padding: 1em; text-align: center;  }
+a { text-decoration: none; }
+a:link, a:visited { color: #0D47A1; transition: 0.1s color; }
+a:hover { color: #1976D2; }
+</style>
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<script>
+$(document).ready(function() {
+	$("button#add").click(function(e) {
+		e.preventDefault();
+		var hostname = $("input[name='hostname']").val();
+		var ip = $("input[name='ip']").val();
+		$.get("/add/" + hostname + "/" + ip, {
+			"name": $("input[name='name']").val(),
+			"email": $("input[name='email']").val(),
+			"secret": $("input[name='secret']").val(),
+		}, function(data) {
+			if (data.status == "error") {
+				alert(data.error);
+			} else {
+				window.location = window.location;
+			}
+		}, 'json');
+	});
+});
+</script>
+</head>
+<body>
+	<h1>Servers Workshop</h1>
+	<h2>Hosted Servers</h2>
+
+	<div id="form">
+		<h3>Add your server</h3>
+		<form id="it">
+			<input type="text" name="hostname" placeholder="Hostname" /> <input type="text" name="ip" placeholder="IP Address" /><br />
+			<input type="text" name="name" placeholder="Your name" /> <input type="email" name="email" placeholder="Your e-mail address" /><br />
+			<input type="text" name="secret" placeholder="Secret" /><br />
+			<button id="add">Add</button>
+		</form>
+	</div>
+
+	<h3>Current Servers</h3>
+	<table>
+		<tr><th>Hostname</th><th>IP</th></tr>
+{% for host, ip in data.items() %}
+<tr><td><a href="http://{{ host }}.{{ zone }}/">{{ host }}</a></td><td>{{ ip['ip'] }}</td></tr>
+{% endfor %}
+	</table>
+
+	<p id="footer">Made with &#x2764; by <a href="https://ktomega.net/">Kevin Tran</a> and <a href="https://hackersatberkeley.com">Hackers@Berkeley</a> for the Intro to Servers Workshop, Spring 2017</p>
+</body>
+</html>

@@ -1,0 +1,7 @@
+config.py
+__pycache__/
+venv/
+cache/
+names.json
+*.key
+*.private
